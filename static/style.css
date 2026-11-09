@@ -144,3 +144,8 @@ h1 { line-height: 1.2; margin: 0 0 0.5rem; }
 .prose table { border-collapse: collapse; display: block; overflow-x: auto; }
 .prose th, .prose td { border: 1px solid var(--border); padding: 0.3rem 0.6rem; text-align: left; }
 .mermaid { margin: 1.5rem 0; text-align: center; }
+
+/* Explicit, labelled metadata (replaces dot-separated chips) */
+dl.meta { display: grid; grid-template-columns: max-content 1fr; gap: 0.15rem 0.75rem; margin: 0.5rem 0; }
+dl.meta dt { font-weight: 600; }
+dl.meta dd { margin: 0; }

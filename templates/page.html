@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ title }} · {{ SITE_TITLE }}{% endblock %}
+{% block head_extra %}
+<link rel="canonical" href="{{ SITE_URL }}/{{ slug }}.html">
+<script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "AboutPage", "name": title, "url": SITE_URL ~ "/" ~ slug ~ ".html", "isPartOf": {"@id": SITE_URL ~ "/#website"}, "about": {"@type": "Blog", "@id": SITE_URL ~ "/#blog"}} | tojson }}</script>
+{% endblock %}
 {% block content %}
 <article class="post">
   <h1>{{ title }}</h1>

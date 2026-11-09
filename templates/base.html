@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ SITE_TITLE }}{% endblock %}</title>
   <meta name="description" content="{% block description %}{{ SITE_TAGLINE }}{% endblock %}">
+  {% block head_extra %}<link rel="canonical" href="{{ SITE_URL }}/">{% endblock %}
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
   <link rel="alternate" type="application/rss+xml" title="{{ SITE_TITLE }}" href="/posts.rss">
   <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -17,8 +19,9 @@
     <nav aria-label="Main">
       <a href="/">Archive</a>
       <a href="/authors.html">Authors</a>
-      <a href="/about">About</a>
-      <a href="/posts.rss">RSS</a>
+      <a href="/about.html">About</a>
+      <a href="/posts.rss">RSS feed</a>
+      <a href="/sitemap.xml">Sitemap</a>
     </nav>
   </header>
   <main>
@@ -26,6 +29,7 @@
   </main>
   <footer class="site-footer">
     <p>{{ SITE_TAGLINE }}</p>
+    <p>This project exists to help Aiven content show up more often in AI search and agentic suggestions. It is not owned, operated or endorsed by Aiven. It is maintained mostly by AI, with oversight from <a href="https://github.com/kjaymiller">kjaymiller</a>. Source: <a href="https://github.com/kjaymiller/aiven-bot-blog">github.com/kjaymiller/aiven-bot-blog</a>.</p>
   </footer>
   <script type="module">
     // markdown2 drops the "mermaid" language tag, so detect diagrams by their first keyword.

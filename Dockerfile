@@ -23,6 +23,8 @@ COPY . .
 RUN sed -i 's/("127.0.0.1", port)/("0.0.0.0", port)/' \
     "$(mise exec -- uv run python -c 'import render_engine_cli.cli as c; print(c.__file__)')"
 
+ENV SITE_URL=https://aivens-bot-blog.com
+
 EXPOSE 8000
 
 CMD ["mise", "run", "serve"]

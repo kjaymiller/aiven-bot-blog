@@ -1,10 +1,13 @@
 """Aiven Bot Blog: an archive of AI-generated blog posts for Aiven."""
 
 import json
+import os
+import re
 from pathlib import Path
 
 from render_engine import Collection, Site
 from render_engine.page import Page
+from render_engine.plugins import hook_impl
 from render_engine_json import JSONPageParser
 from render_engine_markdown import MarkdownPageParser
 
@@ -14,9 +17,39 @@ AUTHORS_BY_SLUG = {
     a["slug"]: a for a in json.loads(Path("content/authors.json").read_text())
 }
 
-SITE_URL = (
-    "https://aiven-bot-blog.example.com"  # TODO: set the real URL before publishing
-)
+# Set SITE_URL in the deployment environment to the public origin (no trailing slash).
+SITE_URL = os.environ.get("SITE_URL", "https://aivens-bot-blog.com").rstrip("/")
+
+
+class SitemapPlugin:
+    """Write sitemap.xml and robots.txt into the output folder after every build."""
+
+    @hook_impl
+    def post_build_site(site, settings):
+        out = Path(site.output_path)
+        names = ["index.html"] + sorted(
+            f.name
+            for f in out.glob("*.html")
+            if f.name not in {"index.html", "404.html"}
+        )
+        entries = []
+        for name in names:
+            loc = f"{SITE_URL}/" if name == "index.html" else f"{SITE_URL}/{name}"
+            html = (out / name).read_text()
+            # Posts carry their publish date; archive/about/authors have none, so omit lastmod.
+            m = re.search(r'article:published_time" content="([^"]+)"', html)
+            lastmod = f"<lastmod>{m.group(1)}</lastmod>" if m else ""
+            entries.append(f"  <url><loc>{loc}</loc>{lastmod}</url>")
+        entries = "\n".join(entries)
+        (out / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            f"{entries}\n</urlset>\n"
+        )
+        (out / "robots.txt").write_text(
+            f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n"
+        )
+
 
 app = Site()
 app.site_vars.update(
@@ -28,6 +61,7 @@ app.site_vars.update(
     }
 )
 app.output_path = "output"
+app.register_plugins(SitemapPlugin)
 
 
 class MarkdownPage(Page):
