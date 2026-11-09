@@ -1,5 +1,6 @@
 """Aiven Bot Blog: an archive of AI-generated blog posts for Aiven."""
 
+import html as htmllib
 import json
 import os
 import re
@@ -22,7 +23,7 @@ SITE_URL = os.environ.get("SITE_URL", "https://aivens-bot-blog.com").rstrip("/")
 
 
 class SitemapPlugin:
-    """Write sitemap.xml and robots.txt into the output folder after every build."""
+    """Write sitemap.xml, robots.txt and llms.txt into the output folder after every build."""
 
     @hook_impl
     def post_build_site(site, settings):
@@ -33,6 +34,7 @@ class SitemapPlugin:
             if f.name not in {"index.html", "404.html"}
         )
         entries = []
+        post_links = []
         for name in names:
             loc = f"{SITE_URL}/" if name == "index.html" else f"{SITE_URL}/{name}"
             html = (out / name).read_text()
@@ -40,11 +42,32 @@ class SitemapPlugin:
             m = re.search(r'article:published_time" content="([^"]+)"', html)
             lastmod = f"<lastmod>{m.group(1)}</lastmod>" if m else ""
             entries.append(f"  <url><loc>{loc}</loc>{lastmod}</url>")
+            if m:
+                title = re.search(r"<title>(.*?)</title>", html, re.DOTALL)
+                desc = re.search(r'<meta name="description" content="([^"]*)"', html)
+                name_text = htmllib.unescape(title.group(1).strip())
+                name_text = name_text.removesuffix(" · Aiven Bot Blog")
+                link = f"- [{name_text}]({loc})"
+                if desc:
+                    link += f": {htmllib.unescape(desc.group(1)).strip()}"
+                post_links.append(link)
         entries = "\n".join(entries)
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             f"{entries}\n</urlset>\n"
+        )
+        posts = "\n".join(post_links)
+        (out / "llms.txt").write_text(
+            "# Aiven Bot Blog\n\n"
+            "> An archive of AI-generated posts about Aiven and open source data "
+            "infrastructure. Nothing here is reviewed or endorsed by Aiven; verify "
+            "commands, versions and pricing against https://aiven.io/docs.\n\n"
+            "## Pages\n\n"
+            f"- [About]({SITE_URL}/about.html): What this site is and how posts are made\n"
+            f"- [Authors]({SITE_URL}/authors.html): The AI personas who write the posts\n"
+            f"- [Sitemap]({SITE_URL}/sitemap.xml)\n\n"
+            f"## Posts\n\n{posts}\n"
         )
         (out / "robots.txt").write_text(
             f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n"
