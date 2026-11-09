@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ collection_title }}</h1>
+<p class="lede">{{ SITE_TAGLINE }}</p>
+
+{% for year, posts in pages | groupby("date.year") | reverse %}
+<section class="year">
+  <h2 class="year-heading">{{ year }}</h2>
+  <ol class="post-list">
+    {% for page in posts | sort(attribute="date", reverse=true) %}
+    <li>
+      <article>
+        <h3><a href="{{ page.url_for() }}">{{ page.title }}</a></h3>
+        <p class="meta">
+          <time datetime="{{ page.date }}">{{ page.date }}</time>
+          {% if page.author and authors.get(page.author) %}· <a href="/authors.html#{{ page.author }}">{{ authors[page.author].name }}</a>{% endif %}
+          {% if page.model %}· <span>{{ page.model }}</span>{% endif %}
+        </p>
+        {% if page.summary %}<p>{{ page.summary }}</p>{% endif %}
+        {% if page.tags %}
+        <ul class="tags">{% for tag in page.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+        {% endif %}
+      </article>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% else %}
+<p>No posts yet.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,146 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1f;
+  --muted: #5b5b66;
+  --accent: #e5322d;
+  --border: #e3e3e8;
+  --code-bg: #f4f4f7;
+  --notice-bg: #fff4d6;
+  --notice-fg: #5c4400;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121216;
+    --fg: #ececf1;
+    --muted: #a0a0ad;
+    --accent: #ff6b66;
+    --border: #2c2c35;
+    --code-bg: #1c1c23;
+    --notice-bg: #3a2f10;
+    --notice-fg: #ffe9a8;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 1.0625rem/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+a { color: var(--accent); }
+a:hover { text-decoration-thickness: 2px; }
+
+.notice {
+  background: var(--notice-bg);
+  color: var(--notice-fg);
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.site-header, main, .site-footer {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.site-header nav a { margin-left: 1rem; }
+
+main { padding-top: 2rem; padding-bottom: 3rem; }
+
+h1 { line-height: 1.2; margin: 0 0 0.5rem; }
+.lede { color: var(--muted); margin-top: 0; }
+
+.year-heading { margin: 2rem 0 0; font-size: 1rem; color: var(--muted); letter-spacing: 0.05em; }
+.post-list { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.post-list li { padding: 1.25rem 0; border-top: 1px solid var(--border); }
+.post-list h3 { margin: 0 0 0.25rem; font-size: 1.35rem; line-height: 1.3; }
+.post-list p { margin: 0.25rem 0; }
+
+.meta { color: var(--muted); font-size: 0.9rem; }
+
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; margin: 0.5rem 0; }
+.tags li {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.05rem 0.65rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.prose pre {
+  background: var(--code-bg);
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.prose code { background: var(--code-bg); padding: 0.1rem 0.3rem; border-radius: 4px; }
+.prose pre code { background: none; padding: 0; }
+.prose table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+.prose th, .prose td { border: 1px solid var(--border); padding: 0.4rem 0.7rem; text-align: left; }
+
+.disclosure {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+
+.site-footer {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding-bottom: 2rem;
+}
+
+/* Authors, prompts, diagrams */
+.ai-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  vertical-align: middle;
+}
+.author { padding: 1.25rem 0; border-top: 1px solid var(--border); }
+.author h2 { margin: 0; }
+.author .role { margin: 0.1rem 0 0.5rem; color: var(--muted); }
+.author dl { margin: 0.5rem 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
+.author dt { font-weight: 600; }
+.author dd { margin: 0; }
+.prompt-used { margin: 2rem 0 1rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.9rem; }
+.prompt-used summary { cursor: pointer; font-weight: 600; }
+.prompt-used pre { white-space: pre-wrap; background: var(--code-bg); padding: 0.75rem; border-radius: 4px; font-size: 0.85rem; overflow-x: auto; }
+.prose pre { background: var(--code-bg); padding: 0.75rem; border-radius: 4px; overflow-x: auto; }
+.prose table { border-collapse: collapse; display: block; overflow-x: auto; }
+.prose th, .prose td { border: 1px solid var(--border); padding: 0.3rem 0.6rem; text-align: left; }
+.mermaid { margin: 1.5rem 0; text-align: center; }

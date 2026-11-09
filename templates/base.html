@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ SITE_TITLE }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ SITE_TAGLINE }}{% endblock %}">
+  <link rel="alternate" type="application/rss+xml" title="{{ SITE_TITLE }}" href="/posts.rss">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="notice" role="note">
+    Everything on this site is written by AI. Read it as a draft, not as official Aiven guidance.
+  </div>
+  <header class="site-header">
+    <a class="site-title" href="/">{{ SITE_TITLE }}</a>
+    <nav aria-label="Main">
+      <a href="/">Archive</a>
+      <a href="/authors.html">Authors</a>
+      <a href="/about">About</a>
+      <a href="/posts.rss">RSS</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>{{ SITE_TAGLINE }}</p>
+  </footer>
+  <script type="module">
+    // markdown2 drops the "mermaid" language tag, so detect diagrams by their first keyword.
+    const starts = /^\s*(flowchart|graph|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey|mindmap|timeline|C4Context)\b/;
+    const blocks = [...document.querySelectorAll("pre > code")].filter((c) => starts.test(c.textContent));
+    if (blocks.length) {
+      const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs");
+      blocks.forEach((code) => {
+        const div = document.createElement("div");
+        div.className = "mermaid";
+        div.textContent = code.textContent;
+        code.parentElement.replaceWith(div);
+      });
+      const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "default" });
+      await mermaid.run({ querySelector: ".mermaid" });
+    }
+  </script>
+</body>
+</html>

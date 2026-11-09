@@ -1,0 +1,23 @@
+[project]
+name = "aiven-bot-blog"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "render-engine>=2026.9.1",
+    "render-engine-cli>=2025.11.1",
+    "render-engine-json>=2025.3.1",
+    "render-engine-markdown>=2023.12.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.4",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# render-engine reads these as plain class attributes
+"app.py" = ["RUF012"]
+
+[tool.ruff]
+# posts are prose; their code samples are illustrative, not project code
+extend-exclude = ["content"]

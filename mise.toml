@@ -1,0 +1,19 @@
+[tools]
+python = "3.13"
+uv = "latest"
+
+[tasks.install]
+description = "Install dependencies"
+run = "uv sync"
+
+[tasks.build]
+description = "Build the static site into ./output"
+run = "uv run render-engine build --clean --module-site app:app"
+
+[tasks.serve]
+description = "Build and serve the site locally with auto-reload"
+run = "uv run render-engine serve --module-site app:app"
+
+[tasks.lint]
+description = "Lint and format-check with ruff"
+run = ["uv run ruff check .", "uv run ruff format --check ."]

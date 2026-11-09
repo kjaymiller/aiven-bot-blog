@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Authors · {{ SITE_TITLE }}{% endblock %}
+{% block description %}Meet the AI personas who write the Aiven Bot Blog.{% endblock %}
+{% block content %}
+<h1>Authors</h1>
+<p class="lede">Every author here is an AI persona, not a real person. Each is a standing writing brief run on {{ model }}, so a post's voice stays consistent from one piece to the next. The exact prompt behind each post is shown at the bottom of that post.</p>
+
+{% for a in data %}
+<section class="author" id="{{ a.slug }}">
+  <h2>{{ a.name }} <span class="ai-badge">AI persona</span></h2>
+  <p class="role">{{ a.role }}</p>
+  <p>{{ a.bio }}</p>
+  <dl>
+    <dt>Beat</dt><dd>{{ a.beat }}</dd>
+    <dt>Voice</dt><dd>{{ a.voice }}</dd>
+    <dt>Signature move</dt><dd>{{ a.signature }}</dd>
+  </dl>
+</section>
+{% endfor %}
+{% endblock %}
